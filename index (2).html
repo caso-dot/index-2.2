@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Benefits Visit Calculator</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f5;--sf:#fff;--ink:#12242e;--mu:#5a6e7a;--ln:#d3dde3;--ac:#0e6a73;--acs:#dff0f1;--wn:#a24a08;--wns:#fbeadb;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a20;--sf:#172830;--ink:#e6eef2;--mu:#98adb8;--ln:#2a3f49;--ac:#5cc4cc;--acs:#173b40;--wn:#f0a766;--wns:#3a2616;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a20;--sf:#172830;--ink:#e6eef2;--mu:#98adb8;--ln:#2a3f49;--ac:#5cc4cc;--acs:#173b40;--wn:#f0a766;--wns:#3a2616;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.6rem;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--mu);margin:0 0 20px}
+h2{font-size:1.05rem;margin:0 0 12px}
+.grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:960px){.grid{grid-template-columns:440px 1fr;align-items:start}}
+.panel{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:16px;margin-bottom:16px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.85rem;color:var(--mu);font-weight:500}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+input:focus-visible,select:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.in{display:flex;align-items:center;gap:0}
+.in b{padding:7px 9px;background:var(--acs);color:var(--ac);border:1px solid var(--ln);border-right:0;border-radius:6px 0 0 6px;font-weight:600}
+.in input{border-radius:0 6px 6px 0}
+.svc{border:1px solid var(--ln);border-radius:8px;margin:0 0 12px;padding:12px}
+.svc legend{font-weight:700;padding:0 6px;color:var(--ac)}
+.ck{flex-direction:row;align-items:center;gap:8px;grid-column:1/-1;color:var(--ink)}
+.ck input{width:auto}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-bottom:16px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:16px}
+.card h3{margin:0 0 10px;font-size:1rem}
+.big{font-size:1.9rem;font-weight:700;color:var(--ac);line-height:1.1}
+.row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-top:1px solid var(--ln);font-size:.92rem}
+.row span:first-child{color:var(--mu)}
+.flag{background:var(--wns);color:var(--wn);border-radius:6px;padding:7px 10px;font-size:.88rem;margin-top:10px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--ln);white-space:nowrap}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+td:nth-child(2){white-space:normal;min-width:140px}
+th{color:var(--mu);font-weight:600}
+tr.div td{background:var(--acs);color:var(--ac);font-weight:600;text-align:left;white-space:normal}
+tr.unc td{color:var(--wn)}
+.empty{color:var(--mu);padding:24px;text-align:center}
+.notes{color:var(--mu);font-size:.85rem;margin:16px 0 0;padding-left:18px}
+.hint{color:var(--mu);font-size:.85rem;margin:0 0 10px}
+#grid{max-height:440px;overflow:auto}
+.g th,.g td{text-align:center;padding:5px 4px}
+.g td:first-child,.g th:first-child{text-align:left}
+.g td:nth-child(2),.g th:nth-child(2){text-align:center;min-width:0}
+.g th{position:sticky;top:0;background:var(--sf)}
+.g input{width:auto;padding:0;accent-color:var(--ac)}
+.g button{font:inherit;border:1px solid var(--ln);background:var(--bg);color:var(--ink);border-radius:6px;cursor:pointer;padding:1px 8px}
+.g tr.chunk td{border-top:2px solid var(--ac)}
+.g td.cb{cursor:pointer;user-select:none;-webkit-user-select:none;min-width:38px;height:32px}
+.g td.cb::after{content:"";display:block;width:18px;height:18px;margin:auto;border:2px solid var(--ln);border-radius:4px;background:var(--bg)}
+.g td.cb.on::after{content:"✓";background:var(--ac);border-color:var(--ac);color:var(--bg);font-size:13px;line-height:14px;font-weight:700;text-align:center}
+.g td.cb:focus-visible{outline:2px solid var(--ac)}
+.g th.col{cursor:pointer;text-decoration:underline dotted}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bar button{font:inherit;border:1px solid var(--ln);background:var(--bg);color:var(--ink);border-radius:6px;cursor:pointer;padding:6px 12px}
+.bar button:disabled{opacity:.45;cursor:default}
+.cmp th,.cmp td{text-align:right}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp th:nth-child(2),.cmp td:nth-child(2){text-align:right;min-width:0;white-space:nowrap}
+.cmp th{white-space:normal}
+.cmp .sel{background:var(--acs);color:var(--ac);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Benefits visit calculator</h1>
+<p class="sub">Enter the patient’s benefits and a treatment schedule. The estimate updates as you type and shows what carries into the new plan year.</p>
+<div class="grid">
+<div>
+<div class="panel"><h2>Plan benefits</h2>
+<div class="f">
+<label class="ck" style="flex-direction:column;align-items:stretch;gap:3px"><span style="color:var(--mu);font-weight:500">Insurance</span><select id="carrier"><option>Premera</option><option>Regence</option><option>Medicare</option><option>Pay at time of service</option></select><span style="color:var(--mu);font-size:.8rem">Allowed amounts and fees you type are saved in this browser for each insurance.</span></label>
+<label>Deductible<span class="in"><b>$</b><input id="ded" type="number" min="0" step="any" inputmode="decimal"></span></label>
+<label>Deductible met so far<span class="in"><b>$</b><input id="dedmet" type="number" min="0" step="any" inputmode="decimal"></span></label>
+<label>Out-of-pocket max (optional)<span class="in"><b>$</b><input id="oop" type="number" min="0" step="any" inputmode="decimal"></span></label>
+<label>Out-of-pocket met so far<span class="in"><b>$</b><input id="oopmet" type="number" min="0" step="any" inputmode="decimal"></span></label>
+<label>Adjustment visits allowed per year (blank = no limit)<input id="lim" type="number" min="0" inputmode="numeric"></label>
+<label>Adjustment visits used so far<input id="used" type="number" min="0" inputmode="numeric"></label>
+<label class="ck"><input type="checkbox" id="shared">Shared limit: every visit counts toward it and it applies to all services</label>
+<label>Plan resets on<input id="reset" type="date"></label>
+<label>Next-year deductible (blank = same)<span class="in"><b>$</b><input id="ded2" type="number" min="0" step="any" inputmode="decimal"></span></label>
+<label>Next-year visit limit (blank = same)<input id="lim2" type="number" min="0" inputmode="numeric"></label>
+</div></div>
+<div class="panel"><h2>Services</h2><div class="f" style="margin-bottom:12px;align-items:end"><label>Coinsurance % patient pays, for all services<span class="in"><b>%</b><input id="coall" type="number" min="0" max="100" step="any" inputmode="decimal"></span></label><button type="button" id="applyco" style="font:inherit;font-weight:600;padding:8px 10px;border-radius:6px;border:1px solid var(--ac);background:var(--ac);color:var(--bg);cursor:pointer">Apply after deductible</button></div><div id="svc"></div></div>
+<div class="panel"><h2>Schedule</h2>
+<div class="f">
+<label>Care plan<select id="cp"><option value="3,12">3 times a week, 12 weeks</option><option value="2,12">2 times a week, 12 weeks</option><option value="3,4">3 times a week, 4 weeks</option><option value="custom">Custom</option></select></label>
+<label>First visit<input id="start" type="date"></label>
+<label>Visits per week<input id="pw" type="number" min="1" max="7" value="3" inputmode="numeric"></label>
+<label>Number of weeks<input id="wk" type="number" min="1" value="12" inputmode="numeric"></label>
+</div></div>
+</div>
+<div><div class="panel"><h2>What happens each visit</h2><p class="hint">Click a box to check it, or click and drag to check several at once. Click a column name to check or clear it for every visit. Undo reverses your last change. Use ↓ to copy a visit to all later visits. Starting layout: visit 1 new patient exam and x-ray, visit 2 adjustment, visit 3 adjustment and initial traction, then adjustment and traction. The 3 times a week, 4 weeks plan skips traction and initial traction. Re-exam visits (12th, 24th, 36th) are filled in for each plan. Picking a care plan resets the grid to that plan’s standard layout.</p><div class="bar"><button type="button" id="undo" disabled>Undo</button><button type="button" id="reset">Reset to standard layout</button></div><div id="grid"></div></div><div id="cmp"></div><div id="out"></div></div>
+</div>
+</div>
+<script>
+const S=[{k:'newpt',n:'New patient exam',h:'New pt'},{k:'office',n:'Office visit',h:'Office'},{k:'xray',n:'X-ray',h:'X-ray'},{k:'adj',n:'Adjustment',h:'Adjust'},{k:'itrac',n:'Initial traction',h:'Init. trac.'},{k:'trac',n:'Traction',h:'Traction'},{k:'kit',n:'Spinal hygiene kit',h:'Kit'}];
+const $=id=>document.getElementById(id);
+const FR=[['all','Every visit'],['first','First visit only'],['e2','Every 2nd visit'],['e4','Every 4th visit'],['none','Not used']];
+const num=id=>parseFloat($(id).value)||0;
+const opt=id=>{const x=parseFloat($(id).value);return isNaN(x)?null:x};
+const money=n=>(n<-0.004?'−':'')+'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fd=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const pd=s=>s?new Date(s+'T00:00'):null;
+
+S.forEach(s=>{
+  $('svc').insertAdjacentHTML('beforeend',`<fieldset class="svc"><legend>${s.n}</legend><div class="f">
+  <label>Allowed amount<span class="in"><b>$</b><input id="a_${s.k}" type="number" min="0" step="any" inputmode="decimal"></span></label>
+  <label>Time-of-service fee<span class="in"><b>$</b><input id="t_${s.k}" type="number" min="0" step="any" inputmode="decimal"></span></label>
+  <label>Patient pays<select id="y_${s.k}"><option value="copay">Copay (skips deductible)</option><option value="coins">Coinsurance (after deductible)</option></select></label>
+  <label><span id="l_${s.k}">Copay amount</span><span class="in"><b id="u_${s.k}">$</b><input id="v_${s.k}" type="number" min="0" step="any" inputmode="decimal"></span></label>
+  </div></fieldset>`);
+  $('y_'+s.k).addEventListener('change',()=>{
+    const c=$('y_'+s.k).value==='coins';
+    $('l_'+s.k).textContent=c?'Coinsurance (% patient pays)':'Copay amount';
+    $('u_'+s.k).textContent=c?'%':'$';
+  });
+});
+
+let store={};
+try{store=JSON.parse(localStorage.getItem('bcAllowed')||'{}')}catch(e){store={}}
+function persist(){try{localStorage.setItem('bcAllowed',JSON.stringify(store))}catch(e){}}
+const DEFAULTS={Premera:{newpt:145.22,office:118.35,adj:34.04,xray:154.46,itrac:37.07,trac:14.15},Regence:{newpt:150.68,office:121.83,adj:39.86,xray:142.56,itrac:37.95,trac:15.53},Medicare:{adj:42.91}};
+const FEES={newpt:80,office:60,adj:80,xray:270,itrac:65,trac:65,kit:116};
+function loadCarrier(){const c=$('carrier').value,d=store[c]||{},f=store._fees||{},df=DEFAULTS[c]||{};S.forEach(s=>{$('a_'+s.k).value=d[s.k]??df[s.k]??'';$('t_'+s.k).value=f[s.k]??FEES[s.k]??''});if(c==='Medicare'&&$('ded').value==='')$('ded').value=283}
+$('carrier').addEventListener('change',loadCarrier);
+function applySelf(){
+  const self=$('carrier').value==='Pay at time of service';
+  [...$('carrier').closest('.f').children].forEach((el,i)=>{if(i>0)el.style.display=self?'none':''});
+  S.forEach(s=>{if(s.k==='kit')return;['a_','y_','v_'].forEach(p=>$(p+s.k).closest('label').style.display=self?'none':'')});
+  $('coall').closest('.f').style.display=self?'none':'';
+}
+$('carrier').addEventListener('change',applySelf);
+document.addEventListener('input',e=>{
+  const id=e.target.id||'';
+  if(id.startsWith('a_')){const c=$('carrier').value;store[c]=store[c]||{};store[c][id.slice(2)]=e.target.value;persist()}
+  else if(id.startsWith('t_')){store._fees=store._fees||{};store._fees[id.slice(2)]=e.target.value;persist()}
+});
+$('applyco').addEventListener('click',()=>{
+  const p=$('coall').value;
+  S.forEach(s=>{const y=$('y_'+s.k);y.value='coins';y.dispatchEvent(new Event('change',{bubbles:true}));$('v_'+s.k).value=p});
+  calc();
+});
+['a_kit','y_kit','v_kit'].forEach(id=>$(id).closest('label').style.display='none');
+$('t_kit').closest('.f').insertAdjacentHTML('beforeend','<span style="grid-column:1/-1;color:var(--mu);font-size:.8rem">Always charged at the time-of-service fee. Insurance isn’t billed.</span>');
+let hist=[];
+function snap(){hist.push(JSON.stringify(plan));if(hist.length>50)hist.shift();$('undo').disabled=false}
+let plan=[];
+const DEF=(i,cc)=>{const c=cc||$('cp').value,t=c!=='3,4',v=i+1;const r={newpt:i===0,office:false,xray:i===0,adj:i>0,itrac:t&&i===2,trac:t&&i>2,kit:false};
+  if(c==='3,12'){if(v===12||v===24)r.office=true;if(v===36)r.xray=true}
+  else if(c==='2,12'){if(v===12){r.office=true;r.xray=true}}
+  else if(c==='3,4'){if(v===12)r.office=true}
+  return r};
+function nVisits(){return Math.min(200,Math.max(1,Math.floor(num('pw')))*Math.max(0,Math.floor(num('wk'))))}
+function syncPlan(){const n=nVisits();while(plan.length<n)plan.push(DEF(plan.length))}
+function renderGrid(){
+  syncPlan();const n=nVisits();
+  let h='<table class="g"><thead><tr><th>Visit</th>'+S.map(s=>`<th class="col" data-k="${s.k}" title="Click to check or clear every visit">${s.h}</th>`).join('')+'<th></th></tr></thead><tbody>';
+  for(let i=0;i<n;i++){
+    h+=`<tr${i&&i%12===0?' class="chunk"':''}><td>${i+1}</td>`+S.map(s=>`<td class="cb${plan[i][s.k]?' on':''}" data-i="${i}" data-k="${s.k}" role="checkbox" tabindex="0" aria-checked="${!!plan[i][s.k]}" aria-label="${s.n}, visit ${i+1}"></td>`).join('')+`<td><button type="button" data-fill="${i}" title="Copy this visit to all later visits" aria-label="Copy visit ${i+1} to all later visits">↓</button></td></tr>`;
+  }
+  $('grid').innerHTML=h+'</tbody></table>';
+}
+function compare(){
+  const PL=[['3,12','3 times a week, 12 weeks'],['2,12','2 times a week, 12 weeks'],['3,4','3 times a week, 4 weeks']];
+  const cur=$('cp').value,self=$('carrier').value==='Pay at time of service';
+  const R=PL.map(([k,n])=>{
+    const q=k.split(',').map(Number),pw=q[0],wk=q[1];
+    const rows=Array.from({length:pw*wk},(_,i)=>DEF(i,k));
+    const yrs=calc({pw,wk,rows});if(!yrs)return null;
+    const sum=f=>yrs.reduce((a,y)=>a+f(y),0),dy=yrs.find(y=>y.pre||y.dedDate);
+    return{k,n,visits:pw*wk,owed:sum(y=>y.owed),ins:sum(y=>y.ins),y1:yrs[0].owed,y2:yrs.length>1?yrs.slice(1).reduce((a,y)=>a+y.owed,0):null,ded:dy?(dy.pre?'Already met':fd(dy.dedDate)):'Not reached',unc:sum(y=>y.unc)};
+  });
+  if(R.some(r=>!r)){$('cmp').innerHTML='';return}
+  const L=[['Visits',r=>r.visits],['Patient owes, total',r=>money(r.owed)],['This plan year',r=>money(r.y1)],['Next plan year',r=>r.y2===null?'None':money(r.y2)],['Insurance pays',r=>money(r.ins)]];
+  if(!self)L.push(['Deductible met on',r=>r.ded]);
+  if(R.some(r=>r.unc))L.push(['Visits over the limit',r=>r.unc]);
+  let h='<div class="panel"><h2>Compare care plans</h2><div class="tw"><table class="cmp"><thead><tr><th></th>'+R.map(r=>`<th${r.k===cur?' class="sel"':''}>${r.n}</th>`).join('')+'</tr></thead><tbody>';
+  L.forEach(([l,f])=>{h+=`<tr><td>${l}</td>`+R.map(r=>`<td${r.k===cur?' class="sel"':''}>${f(r)}</td>`).join('')+'</tr>'});
+  $('cmp').innerHTML=h+'</tbody></table></div><p class="hint" style="margin:8px 0 0">Each plan uses its standard visit layout, without the spinal hygiene kit, and the same insurance, deductible and start date as above. The highlighted column is the care plan selected. Your edits in the grid only change the detailed results below.</p></div>';
+}
+function syncPreset(){const v=num('pw')+','+num('wk');$('cp').value=['3,12','2,12','3,4'].includes(v)?v:'custom'}
+['pw','wk'].forEach(id=>$(id).addEventListener('input',()=>{syncPreset();renderGrid()}));
+$('cp').addEventListener('change',()=>{const v=$('cp').value;if(v!=='custom'){const p=v.split(',');$('pw').value=p[0];$('wk').value=p[1];snap();plan=[]}renderGrid()});
+let paint=null;
+const setCell=(c,v)=>{plan[+c.dataset.i][c.dataset.k]=v;c.classList.toggle('on',v);c.setAttribute('aria-checked',v)};
+$('grid').addEventListener('pointerdown',e=>{const c=e.target.closest('td.cb');if(!c)return;e.preventDefault();snap();paint=!plan[+c.dataset.i][c.dataset.k];setCell(c,paint);calc()});
+document.addEventListener('pointermove',e=>{if(paint===null)return;const el=document.elementFromPoint(e.clientX,e.clientY),c=el&&el.closest&&el.closest('td.cb');if(c&&plan[+c.dataset.i][c.dataset.k]!==paint)setCell(c,paint)});
+document.addEventListener('pointerup',()=>{if(paint!==null){paint=null;calc()}});
+$('grid').addEventListener('keydown',e=>{const c=e.target.closest&&e.target.closest('td.cb');if(!c||(e.key!==' '&&e.key!=='Enter'))return;e.preventDefault();snap();setCell(c,!plan[+c.dataset.i][c.dataset.k]);calc()});
+$('grid').addEventListener('click',e=>{const t=e.target.closest('th.col');if(!t)return;snap();const k=t.dataset.k,n=nVisits(),all=plan.slice(0,n).every(p=>p[k]);for(let j=0;j<n;j++)plan[j][k]=!all;renderGrid();calc()});
+$('undo').addEventListener('click',()=>{if(!hist.length)return;plan=JSON.parse(hist.pop());$('undo').disabled=!hist.length;renderGrid();calc()});
+$('reset').addEventListener('click',()=>{snap();plan=[];renderGrid();calc()});
+$('grid').addEventListener('click',e=>{const b=e.target.closest('button[data-fill]');if(!b)return;const i=+b.dataset.fill,n=nVisits();snap();for(let j=i+1;j<n;j++)plan[j]={...plan[i]};renderGrid();calc()});
+let resetEdited=false;
+function defaults(){
+  const t=new Date();
+  $('start').value=iso(t);
+  $('reset').value=(t.getFullYear()+1)+'-01-01';
+}
+$('reset').addEventListener('input',()=>resetEdited=true);
+$('start').addEventListener('input',()=>{
+  const s=pd($('start').value);
+  if(s&&!resetEdited)$('reset').value=(s.getFullYear()+1)+'-01-01';
+});
+
+function calc(ov){
+  const out=$('out');
+  let start=pd($('start').value);
+  const pw=Math.max(1,Math.floor(ov?ov.pw:num('pw'))),wk=Math.max(0,Math.floor(ov?ov.wk:num('wk')));
+  if(!start||!wk){if(ov)return null;$('cmp').innerHTML='';out.innerHTML='<div class="panel empty">Add a first visit date and number of weeks.</div>';return}
+  let reset=pd($('reset').value)||new Date(9999,0,1);
+  const self=$('carrier').value==='Pay at time of service';
+  let curDed=self?0:num('ded'),dedMet=num('dedmet'),oopMax=self?null:opt('oop'),oopMet=num('oopmet'),limit=self?null:opt('lim'),used=num('used');
+  const nextDed=self?null:opt('ded2'),nextLim=self?null:opt('lim2');
+  const mk=()=>({visits:0,owed:0,ins:0,tos:0,unc:0,limitDate:null,rows:[],ded:curDed,dedMet:0,oopMet:0,used:0,limit:limit,resetOn:null,dedDate:null,pre:curDed>0&&dedMet>=curDed});
+  let yrs=[mk()],y=yrs[0],vi=0;
+  syncPlan();const P=ov?ov.rows:plan;
+  for(let w=0;w<wk;w++)for(let i=0;i<pw;i++){
+    const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+w*7+Math.floor(i*7/pw));
+    let resetNote=null;
+    while(d>=reset){
+      resetNote=new Date(reset);
+      reset=new Date(reset.getFullYear()+1,reset.getMonth(),reset.getDate());
+      if(nextDed!==null)curDed=nextDed;
+      if(nextLim!==null)limit=nextLim;
+      dedMet=0;oopMet=0;used=0;
+      y=mk();y.resetOn=resetNote;yrs.push(y);
+    }
+    const svcs=S.filter(s=>P[vi]&&P[vi][s.k]);const before=dedMet;
+    vi++;
+    if(!svcs.length)continue;
+    const shared=$('shared').checked,counts=shared||svcs.some(s=>s.k==='adj'),covered=limit===null||used<limit||!counts;
+    if(counts){if(covered){used++;y.used=used;if(limit!==null&&used===limit&&!y.limitDate)y.limitDate=d}else y.unc++}
+    let owed=0,ins=0,tos=0;
+    let topK=null,topV=-1;
+    svcs.forEach(s=>{if(s.k==='kit'||$('a_'+s.k).value===''||$('y_'+s.k).value!=='copay'||(!covered&&(shared||s.k==='adj')))return;const c=Math.min(num('v_'+s.k),num('a_'+s.k));if(c>topV){topV=c;topK=s.k}});
+    svcs.forEach(s=>{
+      const A=num('a_'+s.k),T=num('t_'+s.k);tos+=T;
+      if(self||s.k==='kit'){owed+=T;return}
+      if($('a_'+s.k).value===''){owed+=T;return}
+      if(!covered&&(shared||s.k==='adj')){owed+=T;return}
+      const rem=Math.max(curDed-dedMet,0),type=$('y_'+s.k).value,val=num('v_'+s.k);
+      let ded=0,pt;
+      if(type==='copay')pt=s.k===topK?Math.min(val,A):0;
+      else{ded=Math.min(A,rem);pt=ded+(A-ded)*val/100}
+      if(oopMax!==null){const room=Math.max(oopMax-oopMet,0);if(pt>room){pt=room;ded=Math.min(ded,pt)}}
+      oopMet+=pt;dedMet+=ded;owed+=pt;ins+=Math.max(A-pt,0);
+    });
+    y.visits++;y.owed+=owed;y.ins+=ins;y.tos+=tos;y.dedMet=dedMet;y.oopMet=oopMet;
+    const hit=curDed>0&&before<curDed&&dedMet>=curDed;
+    if(hit&&!y.dedDate)y.dedDate=d;
+    y.rows.push({n:vi,d,names:svcs.map(s=>s.n).join(', '),owed,ins,tos,dedMet,ded:curDed,covered,hit,sh:shared});
+  }
+  if(ov)return yrs;
+  const label=i=>i===0?'This plan year':i===1?'Next plan year':'Plan year '+(i+1);
+  const tot=yrs.reduce((a,b)=>({visits:a.visits+b.visits,owed:a.owed+b.owed,ins:a.ins+b.ins,tos:a.tos+b.tos}),{visits:0,owed:0,ins:0,tos:0});
+  let html='<div class="cards">';
+  yrs.forEach((r,i)=>{
+    html+=`<div class="card"><h3>${label(i)}${r.resetOn?' (from '+fd(r.resetOn)+')':''}</h3>
+    <div class="big">${money(r.owed)}</div><div style="color:var(--mu);font-size:.85rem;margin-bottom:8px">patient owes across ${r.visits} visit${r.visits===1?'':'s'}</div>
+    <div class="row"><span>Insurance pays</span><span>${money(r.ins)}</span></div>
+    <div class="row"><span>Collected at time of service</span><span>${money(r.tos)}</span></div>
+    <div class="row"><span>${r.tos-r.owed>=0?'Over-collected (credit)':'Balance still due'}</span><span>${money(Math.abs(r.tos-r.owed))}</span></div>
+    <div class="row"${self?' style="display:none"':''}><span>Deductible met by end</span><span>${money(Math.min(r.dedMet,r.ded))} of ${money(r.ded)}</span></div>
+    <div class="row"${self?' style="display:none"':''}><span>Deductible met on</span><span>${r.pre?'Already met':r.dedDate?fd(r.dedDate):'Not reached'}</span></div>
+    ${r.limit!==null?`<div class="row"><span>${$('shared').checked?'Covered visits used':'Adjustment visits used'}</span><span>${r.used} of ${r.limit}</span></div>`:''}
+    ${r.limitDate?`<div class="flag">Visit limit reached ${fd(r.limitDate)}.${r.unc?` ${r.unc} later ${$('shared').checked?'visit':'adjustment'}${r.unc===1?'':'s'} not covered and billed at the time-of-service fee.`:''}</div>`:''}</div>`;
+  });
+  if(yrs.length>1)html+=`<div class="card"><h3>Whole schedule</h3><div class="big">${money(tot.owed)}</div><div style="color:var(--mu);font-size:.85rem;margin-bottom:8px">patient owes across ${tot.visits} visits</div>
+    <div class="row"><span>Insurance pays</span><span>${money(tot.ins)}</span></div>
+    <div class="row"><span>Collected at time of service</span><span>${money(tot.tos)}</span></div>
+    <div class="row"><span>${tot.tos-tot.owed>=0?'Over-collected (credit)':'Balance still due'}</span><span>${money(Math.abs(tot.tos-tot.owed))}</span></div></div>`;
+  html+='</div><div class="panel"><h2>Visit by visit</h2><div class="tw"><table><thead><tr><th>Date</th><th>Services</th><th>Patient owes</th><th>Insurance pays</th><th>Collected</th><th>Deductible met</th></tr></thead><tbody>';
+  yrs.forEach(r=>{
+    if(r.resetOn)html+=`<tr class="div"><td colspan="6">Plan resets ${fd(r.resetOn)}: deductible, out-of-pocket and visit count start over</td></tr>`;
+    r.rows.forEach(v=>{html+=`<tr class="${v.covered?'':'unc'}"><td>${v.n}. ${fd(v.d)}</td><td>${v.names}${v.covered?'':(v.sh?' (over visit limit)':' (adjustment over visit limit)')}${v.hit?' <b style="color:var(--ac)">Deductible met this visit, coinsurance after</b>':''}</td><td>${money(v.owed)}</td><td>${money(v.ins)}</td><td>${money(v.tos)}</td><td>${money(Math.min(v.dedMet,v.ded))}</td></tr>`});
+  });
+  html+=`</tbody></table></div>
+  <ul class="notes"><li>Visits are spread evenly across each week starting on the first visit date.</li>
+  <li>Coinsurance services are charged at the allowed amount until the deductible is met, then the coinsurance percent applies. Copays never count toward the deductible.</li>
+  <li>If two or more copays land on the same visit, only the highest copay is charged. Coinsurance services are still charged normally.</li>
+  <li>A service with no allowed amount for the selected insurance (for example, anything but adjustments on Medicare) is treated as not covered and billed at your time-of-service fee.</li>
+  <li>Past the visit limit, covered services are billed at your time-of-service fee with no insurance payment. Without “shared,” the limit counts adjustment visits and only adjustments are affected. With it, every visit counts and all services are affected.</li>
+  <li>“Collected” is your time-of-service fee per service. The difference against what the patient owes is the refund or balance.</li></ul></div>`;
+  out.innerHTML=html;compare();
+}
+document.addEventListener('input',calc);
+document.addEventListener('change',calc);
+defaults();loadCarrier();applySelf();renderGrid();calc();
+</script>
+</body>
+</html>
